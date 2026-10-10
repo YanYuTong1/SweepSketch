@@ -4,7 +4,7 @@ import heapq
 import os
 
 from sweepsketch.digest import Collector
-from sweepsketch.pcapio import iter_pcap
+from sweepsketch.pcapio import iter_pcap, trace_name
 
 from common import (ATT_DIR, BENIGN, DB, DUMMY, EXP4_TARGETS, RES, STAGGER,
                     attack_files, config, f1_of, feed, flush, h_flag, ip24,
@@ -122,9 +122,10 @@ def run_e1(theta0, budgets, tag="EXP1_static", dump=None, benign=None):
             with open(dump, "w", newline="") as fh:
                 w = csv.writer(fh)
                 w.writerow(["entity", "type", "flagged"])
-                for f in attack_files():          
-                    pfx = ip24(f.split("_")[0])
-                    w.writerow([f, f.split("_")[1], 1 if flagged.get(pfx) else 0])
+                for f in attack_files():
+                    nm = trace_name(f)
+                    pfx = ip24(nm.split("_")[0])
+                    w.writerow([nm, nm.split("_")[1], 1 if flagged.get(pfx) else 0])
                 for p in sorted(gt_benign):
                     if flagged.get(p):
                         w.writerow([p, "benign", 1])

@@ -1,5 +1,7 @@
 
 
+import csv
+import gzip
 import os
 import struct
 
@@ -120,21 +122,78 @@ def iter_pcapng(path: str, max_pkts: int = 500000, with_flow: bool = False):
 
 
 def read_pcapng(path: str, max_pkts: int = 500000, with_flow: bool = False):
-    
+
     return list(iter_pcapng(path, max_pkts, with_flow))
 
 
+CSV_SUFFIXES = (".csv", ".csv.gz")
+TRACE_SUFFIXES = (".pcap",) + CSV_SUFFIXES
+
+
+def is_trace_csv(path: str) -> bool:
+
+    return path.lower().endswith(CSV_SUFFIXES)
+
+
+def is_trace(name: str) -> bool:
+
+    return name.lower().endswith(TRACE_SUFFIXES)
+
+
+def trace_name(name: str) -> str:
+
+    return name[:-3] if name.lower().endswith(".csv.gz") else name
+
+
+def _ip_to_int(text: str) -> int:
+
+    a, b, c, d = text.split(".")
+    return (int(a) << 24) | (int(b) << 16) | (int(c) << 8) | int(d)
+
+
+def iter_csv(path: str, max_pkts: int = 500000, with_flow: bool = False):
+
+    opener = gzip.open if path.lower().endswith(".gz") else open
+    with opener(path, "rt", newline="") as f:
+        n = 0
+        for row in csv.reader(f):
+            if n >= max_pkts:
+                break
+            if len(row) < 6:
+                continue
+            try:
+                ts = float(row[0])
+                src = _ip_to_int(row[1])
+                dst = _ip_to_int(row[2])
+                proto = int(row[3])
+                sport = int(row[4])
+                dport = int(row[5])
+            except ValueError:
+                continue
+            n += 1
+            if with_flow:
+                yield (src, dst, proto, sport, dport, ts)
+            else:
+                yield (src, dst, ts)
+
+
 def read_pcap(path: str, max_pkts: int = 500000, with_flow: bool = False):
-    
-    flows = read_pcap_legacy(path, max_pkts, with_flow)
-    if not flows:
-        flows = read_pcapng(path, max_pkts, with_flow)
+
+    if is_trace_csv(path):
+        flows = list(iter_csv(path, max_pkts, with_flow))
+    else:
+        flows = read_pcap_legacy(path, max_pkts, with_flow)
+        if not flows:
+            flows = read_pcapng(path, max_pkts, with_flow)
     flows.sort(key=lambda x: x[-1])
     return flows
 
 
 def iter_pcap(path: str, max_pkts: int = 500000, with_flow: bool = True):
-    
+
+    if is_trace_csv(path):
+        yield from iter_csv(path, max_pkts, with_flow)
+        return
     it = iter_pcap_legacy(path, max_pkts, with_flow)
     first = next(it, None)
     if first is not None:

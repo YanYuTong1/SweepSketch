@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from sweepsketch import config
 from sweepsketch.digest import Collector
 from sweepsketch.epoch import epoch_of
+from sweepsketch.pcapio import is_trace
 from sweepsketch.sketch import Level, SweepSketch
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -94,7 +95,7 @@ def flush(stats, cur):
 
 
 def attack_files():
-    return sorted(f for f in os.listdir(ATT_DIR) if f.endswith(".pcap"))
+    return sorted(f for f in os.listdir(ATT_DIR) if is_trace(f))
 
 
 def f1_of(flagged, gt_attack, gt_benign):

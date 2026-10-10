@@ -90,7 +90,7 @@ def run_real(theta0, dump=None):
     files = []
     for kind, d in MULTI_DIRS:
         files += [(kind, os.path.join(d, f)) for f in sorted(os.listdir(d))
-                  if f.endswith(".pcap")]
+                  if pcapio.is_trace(f)]
     files += BENIGN_FILES
     rows = []
     print("EXP_real validation on real samples (%d files; θ₀=%.4f; epoch=4.29s; GT = prefixes ≥1%%)" %

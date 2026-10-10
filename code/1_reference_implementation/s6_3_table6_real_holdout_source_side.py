@@ -59,7 +59,7 @@ def run_real_baselines_src():
     files = []
     for kind, d in MULTI_DIRS:
         files += [(kind, os.path.join(d, f)) for f in sorted(os.listdir(d))
-                  if f.endswith(".pcap")]
+                  if pcapio.is_trace(f)]
     files += BENIGN_FILES
     rows = []
     print("EXP_real-B source-side control: %d files × %d methods (GT = all sources in the file; τ = E1 final 0.0)" %

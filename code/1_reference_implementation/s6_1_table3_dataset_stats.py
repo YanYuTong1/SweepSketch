@@ -6,7 +6,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from sweepsketch.pcapio import iter_pcap          # noqa: E402
+from sweepsketch.pcapio import is_trace, iter_pcap, trace_name          # noqa: E402
 
 DB = os.path.normpath(os.path.join(HERE, "..", "..", "database"))
 RES = os.path.normpath(os.path.join(HERE, "..", "..", "results", "csv"))
@@ -42,12 +42,12 @@ def main():
     ]
     rows = []
     for kind, d in parts:
-        files = sorted(f for f in os.listdir(d) if f.endswith(".pcap"))
+        files = sorted(f for f in os.listdir(d) if is_trace(f))
         if kind == "single24":
             
             groups = {}
             for f in files:
-                typ = f.split("_")[1]
+                typ = trace_name(f).split("_")[1]
                 n, span, cnt, segs, pfm = profile_file(os.path.join(d, f))
                 g = groups.setdefault(typ, {"n": 0, "pkts": 0, "spans": [],
                                             "dst": set(), "pd": [], "pf": []})
@@ -68,7 +68,7 @@ def main():
                              round(statistics.median(g["pf"]), 1), ""))
         else:
             for f in files:
-                typ = f.split("_")[1]
+                typ = trace_name(f).split("_")[1]
                 n, span, cnt, segs, pfm = profile_file(os.path.join(d, f))
                 rows.append((kind, typ, 1, n, round(span, 1), len(cnt),
                              round(statistics.median(cnt.values()), 1),

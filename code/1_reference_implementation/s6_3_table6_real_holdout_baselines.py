@@ -68,7 +68,7 @@ def run_real_baselines():
     files = []
     for kind, d in MULTI_DIRS:
         files += [(kind, os.path.join(d, f)) for f in sorted(os.listdir(d))
-                  if f.endswith(".pcap")]
+                  if pcapio.is_trace(f)]
     files += BENIGN_FILES
     rows = []
     per_method = {m: {"scores": [], "gt": []} for m in DST_METHODS}

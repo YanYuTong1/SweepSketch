@@ -14,19 +14,28 @@ Code accompanying the SweepSketch paper.
 
 ## Data
 
-Traffic traces are not stored in this repository. Download the artifact archive
-from the release page and extract it so that `database/` sits next to `code/`:
+`database/attack/` holds the packet records used by the real-traffic
+experiments. They are stored gzipped, one line per packet:
 
 ```
-sweepsketch-artifact/
-├── code/
-└── database/
-    └── attack/normal_single24/*.csv
+ts,src,dst,proto,sport,dport
+1780286476.261322,45.142.193.150,1.182.230.94,17,65333,26009
 ```
+
+| Directory | Files | Contents |
+|---|---|---|
+| `normal_single24/` | 71 | Real captures, one destination /24 each |
+| `natural_multi24/` | 2 | Real captures, multiple destination /24s |
+| `synthetic_multi24_by_timestamp/` | 13 | Multi-prefix holdout samples, interleaved by timestamp |
+| `synthetic_multi24_shuffled/` | 15 | Multi-prefix holdout samples, shuffled |
+
+The loaders in `sweepsketch/pcapio.py` read `.csv.gz` and plain `.csv`
+interchangeably, so nothing downstream changes if you decompress in place.
 
 The benign corpora are not redistributed. Obtain CIC-IDS-2017 and CIC-IoT-2023
 from the UNB Canadian Institute for Cybersecurity, and place the benign pcaps
-under `database/benign/`.
+under `database/benign/` (the file names expected there are listed in
+`common.py` and `s6_3_table6_real_holdout.py`).
 
 ## Reference implementation
 
