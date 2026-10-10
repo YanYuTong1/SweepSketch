@@ -1,0 +1,6 @@
+database/
+results/
+build/
+__pycache__/
+*.pyc
+.DS_Store
