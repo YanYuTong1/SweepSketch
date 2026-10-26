@@ -3,3 +3,4 @@ __pycache__/
 build/
 results/
 .DS_Store
+logs/

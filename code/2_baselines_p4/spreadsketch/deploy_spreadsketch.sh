@@ -17,6 +17,7 @@ run() {
     ( until $SDE/run_bfshell.sh -c "exit" >/dev/null 2>&1; do sleep 3; done
       $SDE/run_bfshell.sh -b "$P4_DIR/setup_ports.py"
       $SDE/run_bfshell.sh -b "$P4_DIR/setup_tables.py"
+      $SDE/run_bfshell.sh -b "$P4_DIR/setup_fold.py"
       echo "ports+tables ready"
     ) &
     $SDE/run_switchd.sh -p $P4_NAME --arch tf2

@@ -1,0 +1,149 @@
+/work/build/repo_v5/sweepsketch.p4(391): [--Wwarn=unused] warning: Table tb1_nadd is not used; removing
+    @stage(2) table tb1_nadd { actions = { do1_nadd; } default_action = do1_nadd(); size = 1; }
+                    ^^^^^^^^
+/work/build/repo_v5/sweepsketch.p4(448): [--Wwarn=unused] warning: Table tb2_nadd is not used; removing
+    @stage(3) table tb2_nadd { actions = { do2_nadd; } default_action = do2_nadd(); size = 1; }
+                    ^^^^^^^^
+/work/build/repo_v5/sweepsketch.p4(91): [--Wwarn=unused] warning: ra1_nadd: unused instance
+    RegisterAction<bit<8>, bit<13>, void>(l1_nn) ra1_nadd = {
+                                                 ^^^^^^^^
+/work/build/repo_v5/sweepsketch.p4(258): [--Wwarn=unused] warning: ra2_nadd: unused instance
+    RegisterAction<bit<8>, bit<12>, void>(l2_nn) ra2_nadd = {
+                                                 ^^^^^^^^
+/work/build/repo_v5/parser.p4(6): [--Wwarn=uninitialized_out_param] warning: out parameter 'meta' may be uninitialized when 'IngressParser' terminates
+    out sweep_meta_t meta,
+                     ^^^^
+/work/build/repo_v5/parser.p4(3)
+parser IngressParser(
+       ^^^^^^^^^^^^^
+/work/build/repo_v5/parser.p4(135): [--Wwarn=uninitialized_use] warning: d may not be completely initialized
+            dg.pack(d);
+                    ^
+warning: /work/build/repo_v5/sweepsketch.p4(52): The stage specified for table Ingress.clz0 is 2, but we could not place it until stage 3
+    @stage(2) table clz0 { key = { meta.r_hi : ternary; } actions = { act_clz; act_clz_none; }
+                    ^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(364): The stage specified for table Ingress.t1_sk1 is 4, but we could not place it until stage 5
+    @stage(4) table t1_sk1 { actions = { a1_sk1; } default_action = a1_sk1(); size = 1; }
+                    ^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(427): The stage specified for table Ingress.t2_sk1 is 4, but we could not place it until stage 5
+    @stage(4) table t2_sk1 { actions = { a2_sk1; } default_action = a2_sk1(); size = 1; }
+                    ^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(54): The stage specified for table Ingress.clz1 is 3, but we could not place it until stage 4
+    @stage(3) table clz1 { key = { meta.r_mid : ternary; } actions = { act_clz; act_clz_none; }
+                    ^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(56): The stage specified for table Ingress.clz2 is 4, but we could not place it until stage 5
+    @stage(4) table clz2 { key = { meta.r_lo : ternary; } actions = { act_clz; act_clz_none; }
+                    ^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(368): The stage specified for table Ingress.tb1_wn1 is 5, but we could not place it until stage 6
+    @stage(5) table tb1_wn1 { key = { meta.ep_old : ternary; } actions = { act_wn; } default_action = act_wn(8w0); size = 256; }
+                    ^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(369): The stage specified for table Ingress.tb1_wn0 is 5, but we could not place it until stage 6
+    @stage(5) table tb1_wn0 { key = { meta.ep_old : ternary; } actions = { act_wn; } default_action = act_wn(8w0); size = 256; }
+                    ^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(431): The stage specified for table Ingress.tb2_wn1 is 5, but we could not place it until stage 6
+    @stage(5) table tb2_wn1 { key = { meta.ep2_old : ternary; } actions = { act_wn2; } default_action = act_wn2(8w0); size = 256; }
+                    ^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(432): The stage specified for table Ingress.tb2_wn0 is 5, but we could not place it until stage 6
+    @stage(5) table tb2_wn0 { key = { meta.ep2_old : ternary; } actions = { act_wn2; } default_action = act_wn2(8w0); size = 256; }
+                    ^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(372): The stage specified for table Ingress.t1_tag is 6, but we could not place it until stage 7
+    @stage(6) table t1_tag { key = { meta.hll_rv[7:5] : ternary; meta.win_new[2:0] : ternary; }
+                    ^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(380): The stage specified for table Ingress.t1_hllnew is 6, but we could not place it until stage 7
+    @stage(6) table t1_hllnew { key = { meta.win_new[2:0] : ternary; meta.rho : ternary; }
+                    ^^^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(377): The stage specified for table Ingress.t1_epnew is 6, but we could not place it until stage 7
+    @stage(6) table t1_epnew { key = { meta.global_epoch : ternary; meta.win_new[2:0] : ternary; }
+                    ^^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(375): The stage specified for table Ingress.t1_rho is 6, but we could not place it until stage 8
+    @stage(6) table t1_rho { key = { meta.hll_rv[4:0] : ternary; meta.rho : ternary; }
+                    ^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(434): The stage specified for table Ingress.t2_tag is 6, but we could not place it until stage 7
+    @stage(6) table t2_tag { key = { meta.hll2_rv[7:5] : ternary; meta.win2_new[2:0] : ternary; }
+                    ^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(440): The stage specified for table Ingress.t2_hllnew is 6, but we could not place it until stage 7
+    @stage(6) table t2_hllnew { key = { meta.win2_new[2:0] : ternary; meta.rho : ternary; }
+                    ^^^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(438): The stage specified for table Ingress.t2_epnew is 6, but we could not place it until stage 7
+    @stage(6) table t2_epnew { key = { meta.global_epoch : ternary; meta.win2_new[2:0] : ternary; }
+                    ^^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(436): The stage specified for table Ingress.t2_rho is 6, but we could not place it until stage 9
+    @stage(6) table t2_rho { key = { meta.hll2_rv[4:0] : ternary; meta.rho : ternary; }
+                    ^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(58): The stage specified for table Ingress.clz3 is 5, but we could not place it until stage 6
+    @stage(5) table clz3 { key = { meta.r_tail : ternary; } actions = { act_clz; act_clz_last; }
+                    ^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(64): The stage specified for table Ingress.t1_delta is 7, but we could not place it until stage 9
+    @stage(7) table t1_delta {
+                    ^^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(410): The stage specified for table Ingress.tb_rs_de1 is 9, but we could not place it until stage 10
+    @stage(9) table tb_rs_de1 { actions = { do_rs_de1; } default_action = do_rs_de1(); size = 1; }
+                    ^^^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(407): The stage specified for table Ingress.tb_rs_flags2 is 9, but we could not place it until stage 10
+    @stage(9) table tb_rs_flags2 { key = { meta.claim2 : exact; meta.rollover2 : exact; meta.skip2 : exact; meta.event2 : exact; }
+                    ^^^^^^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(413): The stage specified for table Ingress.tb_rs_de2 is 10, but we could not place it until stage 11
+    @stage(10) table tb_rs_de2 { actions = { do_rs_de2; } default_action = do_rs_de2(); size = 1; }
+                     ^^^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(327): The stage specified for table Ingress.t2_delta is 7, but we could not place it until stage 10
+    @stage(7) table t2_delta {
+                    ^^^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(452): The stage specified for table Ingress.tb2_dg is 9, but we could not place it until stage 10
+    @stage(9) table tb2_dg { actions = { do2_dg; } default_action = do2_dg(); size = 1; }
+                    ^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(420): The stage specified for table Ingress.tb1_dg is 9, but we could not place it until stage 10
+    @stage(9) table tb1_dg { actions = { do1_dg; } default_action = do1_dg(); size = 1; }
+                    ^^^^^^
+
+warning: /work/build/repo_v5/sweepsketch.p4(348): The stage specified for table Ingress.ipv4_lpm is 0, but we could not place it until stage 1
+    @stage(0) table ipv4_lpm {
+                    ^^^^^^^^
+
+warning: ingress::d_1._pad1 is read in ingress deparser, however it is never or partially initialized
+warning: ingress::d_1._pad2 is read in ingress deparser, however it is never or partially initialized
+warning: ingress::d_1._padC1 is read in ingress deparser, however it is never or partially initialized
+warning: ingress::d_1._padC2 is read in ingress deparser, however it is never or partially initialized
+warning: ingress::ig_intr_md_for_tm.ucast_egress_port is read in ingress deparser, however it is never or partially initialized
+/work/build/repo_v5/sweepsketch.p4(425): warning: ingress::meta.C2_lt is read in table Ingress.t2_cd1, however it is never or partially initialized
+    @stage(2) table t2_cd1 { actions = { a2_cd1; } default_action = a2_cd1(); size = 1; }
+                    ^^^^^^
+/work/build/repo_v5/sweepsketch.p4(397): warning: ingress::meta.nn_ge_2ne is read in table Ingress.t1_he1b, however it is never or partially initialized
+    @stage(8) table t1_he1b { actions = { a1_he1b; } default_action = a1_he1b(); size = 1; }
+                    ^^^^^^^
+/work/build/repo_v5/sweepsketch.p4(471): warning: ingress::meta.pkt2_ge_min is read in table cond-59, however it is never or partially initialized
+                if (meta.pkt2_ge_min) {
+                    ^^^^^^^^^^^^^^^^
+[--Wwarn=substitution] warning: Ingress.t1_tag: Table key name not supported. Replacing "meta.hll_rv[7:5]" with "meta.hll_rv".
+[--Wwarn=substitution] warning: Ingress.t1_tag: Table key name not supported. Replacing "meta.win_new[2:0]" with "meta.win_new".
+[--Wwarn=substitution] warning: Ingress.t1_hllnew: Table key name not supported. Replacing "meta.win_new[2:0]" with "meta.win_new".
+[--Wwarn=substitution] warning: Ingress.t1_epnew: Table key name not supported. Replacing "meta.win_new[2:0]" with "meta.win_new".
+[--Wwarn=substitution] warning: Ingress.t2_tag: Table key name not supported. Replacing "meta.hll2_rv[7:5]" with "meta.hll2_rv".
+[--Wwarn=substitution] warning: Ingress.t2_tag: Table key name not supported. Replacing "meta.win2_new[2:0]" with "meta.win2_new".
+[--Wwarn=substitution] warning: Ingress.t2_hllnew: Table key name not supported. Replacing "meta.win2_new[2:0]" with "meta.win2_new".
+[--Wwarn=substitution] warning: Ingress.t2_epnew: Table key name not supported. Replacing "meta.win2_new[2:0]" with "meta.win2_new".
+[--Wwarn=substitution] warning: Ingress.t1_rho: Table key name not supported. Replacing "meta.hll_rv[4:0]" with "meta.hll_rv".
+[--Wwarn=substitution] warning: Ingress.t2_rho: Table key name not supported. Replacing "meta.hll2_rv[4:0]" with "meta.hll2_rv".

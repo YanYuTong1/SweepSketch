@@ -1,13 +1,7 @@
-
-
 #ifndef _SPREADSKETCH_HEADERS_P4_
 #define _SPREADSKETCH_HEADERS_P4_
 
 #include <t2na.p4>
-
-
-
-
 
 header ethernet_h {
     bit<48> dstAddr;
@@ -57,10 +51,6 @@ header udp_h {
     bit<16> checksum;
 }
 
-
-
-
-
 struct headers_t {
     ethernet_h  ethernet;
     vlan_h      vlan;
@@ -69,76 +59,53 @@ struct headers_t {
     udp_h       udp;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 struct ig_metadata_t {
 
-    
-    bit<32> src_addr;                   
-    bit<32> dst_addr;                   
-    bit<16> transport_src_port;         
-    bit<16> transport_dst_port;         
+    bit<32> src_addr;
+    bit<32> dst_addr;
+    bit<16> transport_src_port;
+    bit<16> transport_dst_port;
 
-    
-    
-    
     bit<32> h1;
     bit<32> h2;
 
-    
-    
-    
     bit<9>  pos;
-    bit<4>  bm_word;                    
-    bit<5>  bit_idx;                    
-    bit<32> bm_mask;                    
+    bit<4>  bm_word;
+    bit<5>  bit_idx;
+    bit<32> bm_mask;
 
-    
-    
-    
-    bit<8>  b0;                         
-    bit<8>  b1;                         
-    bit<8>  b2;                         
-    bit<8>  b3;                         
-    bit<8>  tz_acc;                     
-    bit<1>  tz_done;                    
-    bit<8>  lvl;                        
+    bit<8>  b0;
+    bit<8>  b1;
+    bit<8>  b2;
+    bit<8>  b3;
+    bit<8>  tz_acc;
+    bit<1>  tz_done;
+    bit<8>  lvl;
 
-    
-    bit<10> bucket_r0;                  
-    bit<10> bucket_r1;
-    bit<10> bucket_r2;
-    bit<10> bucket_r3;
-    bit<14> bm_idx_r0;                  
-    bit<14> bm_idx_r1;
-    bit<14> bm_idx_r2;
-    bit<14> bm_idx_r3;
-    bit<8>  old_lvl_r0;                 
-    bit<8>  old_lvl_r1;
-    bit<8>  old_lvl_r2;
-    bit<8>  old_lvl_r3;
-    bool    takeover_r0;                
+    bit<11> bucket_r0;
+    bit<11> bucket_r1;
+    bit<11> bucket_r2;
+    bit<11> bucket_r3;
+    bit<15> bm_idx_r0;
+    bit<15> bm_idx_r1;
+    bit<15> bm_idx_r2;
+    bit<15> bm_idx_r3;
+    bit<11> raw11_r0;
+    bit<11> raw11_r1;
+    bit<11> raw11_r2;
+    bit<11> raw11_r3;
+    bit<32> old_lvl_r0;
+    bit<32> old_lvl_r1;
+    bit<32> old_lvl_r2;
+    bit<32> old_lvl_r3;
+    bool    takeover_r0;
     bool    takeover_r1;
     bool    takeover_r2;
     bool    takeover_r3;
 }
 
-
-
-
-
 struct eg_metadata_t {
     bit<8> _pad;
 }
 
-#endif 
+#endif

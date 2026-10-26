@@ -1,0 +1,357 @@
+{
+  "program": "<workspace>/build/repo_v5/sweepsketch.p4",
+  "program_md5": "7dda6d7edcee01dcc86c26e7a1bc35c0",
+  "resubmit": true,
+  "passes": 2,
+  "source_resubmit_mentions": 12,
+  "program_name_from_context": "sweepsketch",
+  "compiler": "BF-SDE 9.7.1 original (x86_64, Rosetta)",
+  "compiler_version": "9.7.1 (4316cda)",
+  "target": "tofino2",
+  "arch": "t2na",
+  "status": "PASS",
+  "exit_code": 0,
+  "wall_time_s": 36.88,
+  "n_errors": 0,
+  "first_error": null,
+  "tables": 197,
+  "tables_source": "context.json",
+  "tables_context": 197,
+  "source_tables": 90,
+  "table_names_unique": 197,
+  "context_json": "<workspace>/build/out_v5/pipe/context.json",
+  "phv_status": "PASS",
+  "unallocated_slices": null,
+  "unallocated_bits": null,
+  "n_failing_superclusters": 0,
+  "first_failing_uid": null,
+  "failing_superclusters": [],
+  "unsat_errors": [],
+  "group_usage": {
+    "groups": {
+      "1": {
+        "containers_pct": 75.0,
+        "bits_used_pct": 66.2,
+        "bits_alloc_pct": 75.0
+      },
+      "2": {
+        "containers_pct": 75.0,
+        "bits_used_pct": 72.5,
+        "bits_alloc_pct": 72.5
+      },
+      "3": {
+        "containers_pct": 30.0,
+        "bits_used_pct": 27.5,
+        "bits_alloc_pct": 27.5
+      },
+      "4": {
+        "containers_pct": 0.0,
+        "bits_used_pct": 0.0,
+        "bits_alloc_pct": 0.0
+      },
+      "5": {
+        "containers_pct": 55.0,
+        "bits_used_pct": 54.4,
+        "bits_alloc_pct": 54.4
+      },
+      "6": {
+        "containers_pct": 55.0,
+        "bits_used_pct": 45.3,
+        "bits_alloc_pct": 45.6
+      },
+      "7": {
+        "containers_pct": 10.0,
+        "bits_used_pct": 3.12,
+        "bits_alloc_pct": 3.12
+      },
+      "8": {
+        "containers_pct": 0.0,
+        "bits_used_pct": 0.0,
+        "bits_alloc_pct": 0.0
+      },
+      "9": {
+        "containers_pct": 0.0,
+        "bits_used_pct": 0.0,
+        "bits_alloc_pct": 0.0
+      },
+      "10": {
+        "containers_pct": 0.0,
+        "bits_used_pct": 0.0,
+        "bits_alloc_pct": 0.0
+      },
+      "11": {
+        "containers_pct": 65.0,
+        "bits_used_pct": 60.0,
+        "bits_alloc_pct": 60.0
+      },
+      "12": {
+        "containers_pct": 20.0,
+        "bits_used_pct": 19.8,
+        "bits_alloc_pct": 20.8
+      },
+      "13": {
+        "containers_pct": 0.0,
+        "bits_used_pct": 0.0,
+        "bits_alloc_pct": 0.0
+      },
+      "14": {
+        "containers_pct": 0.0,
+        "bits_used_pct": 0.0,
+        "bits_alloc_pct": 0.0
+      }
+    },
+    "max_containers": {
+      "group": 1,
+      "pct": 75.0
+    },
+    "max_bits_used": {
+      "group": 2,
+      "pct": 72.5
+    },
+    "max_bits_alloc": {
+      "group": 1,
+      "pct": 75.0
+    }
+  },
+  "unallocated_field_slices_listed": null,
+  "phv_rows": {
+    "n_rows": 0,
+    "rows": [],
+    "n_over32_rows": 0,
+    "over32_rows": [],
+    "max_row_bits": null
+  },
+  "resubmit_error_count": 0,
+  "resubmit_error_samples": [],
+  "placement_failure": false,
+  "placement_message": null,
+  "n_unplaced_tables": null,
+  "unplaced_tables": [],
+  "unplaced_table_basenames": [],
+  "placement_reasons": [
+    "Cannot place multiple sections of an individual table in the same stage"
+  ],
+  "placement_errors": 0,
+  "stages_required": 12,
+  "placed_tables": 118,
+  "stages_used": 12,
+  "attached_need_more": [],
+  "first_attached_fail": null,
+  "tables_per_stage": {
+    "0": [
+      "forward_ipv4",
+      "ipv4_lpm",
+      "tb_gk",
+      "tb_gk2",
+      "tb_h1",
+      "tb_h2",
+      "tb_hr",
+      "tb_rs_dec1",
+      "tb_rs_dec2"
+    ],
+    "1": [
+      "tb1_Cadd",
+      "tb1_ep",
+      "tb1_epw",
+      "tb1_kw",
+      "tb1_padd",
+      "tb1_pclr",
+      "tb1_rC",
+      "tb1_rk",
+      "tb1_rp",
+      "tb_sr"
+    ],
+    "2": [
+      "clz0",
+      "t1_cd1",
+      "t2_cd1",
+      "tb1_hlr",
+      "tb1_hwt",
+      "tb1_nadd",
+      "tb1_nadd_rs",
+      "tb1_nclr",
+      "tb1_re",
+      "tb1_rn",
+      "tb1_rof",
+      "tb2_kw",
+      "tb2_rk",
+      "tb2_rof"
+    ],
+    "3": [
+      "clz1",
+      "tb2_Cadd",
+      "tb2_nadd",
+      "tb2_nadd_rs",
+      "tb2_nclr",
+      "tb2_padd",
+      "tb2_pclr",
+      "tb2_rC",
+      "tb2_rn",
+      "tb2_rp"
+    ],
+    "4": [
+      "clz2",
+      "t1_cl1",
+      "t1_sk1",
+      "t2_cl1",
+      "t2_sk1",
+      "tb2_ep",
+      "tb2_epw",
+      "tb2_hlr",
+      "tb2_hwt"
+    ],
+    "5": [
+      "clz3",
+      "tb1_wn0",
+      "tb1_wn1",
+      "tb2_wn0",
+      "tb2_wn1"
+    ],
+    "6": [
+      "t1_epnew",
+      "t1_ev3",
+      "t1_hllnew",
+      "t1_rho",
+      "t1_tag",
+      "t2_epnew",
+      "t2_hllnew",
+      "t2_rho",
+      "t2_tag",
+      "tb1_ge3",
+      "tb1_ne2",
+      "tb2_ge3"
+    ],
+    "7": [
+      "t1_delta",
+      "t2_delta",
+      "tb1_2ne"
+    ],
+    "8": [
+      "t1_he1",
+      "t1_he1b",
+      "t1_he2",
+      "t2_he1"
+    ],
+    "9": [
+      "tb1_dg",
+      "tb2_dg",
+      "tb_dg_valid",
+      "tb_rs_clr",
+      "tb_rs_de1",
+      "tb_rs_ep1",
+      "tb_rs_flags1",
+      "tb_rs_flags2",
+      "tb_rs_go",
+      "tb_rs_hn1",
+      "tb_rs_pass"
+    ],
+    "10": [
+      "tb_rs_de2",
+      "tb_rs_ep2",
+      "tb_rs_hn2"
+    ]
+  },
+  "stage_logical_counts": {
+    "0": 15,
+    "1": 11,
+    "2": 12,
+    "3": 9,
+    "4": 7,
+    "5": 3,
+    "6": 9,
+    "7": 7,
+    "8": 5,
+    "9": 9,
+    "10": 7,
+    "11": 1
+  },
+  "stage_stateful_counts": {
+    "1": 4,
+    "2": 4,
+    "3": 3,
+    "4": 2
+  },
+  "stage_stateful_regs": {
+    "1": [
+      "Ingress.l1_C",
+      "Ingress.l1_ep",
+      "Ingress.l1_key",
+      "Ingress.l1_pkt"
+    ],
+    "2": [
+      "Ingress.l1_hll",
+      "Ingress.l1_ne",
+      "Ingress.l1_nn",
+      "Ingress.l2_key"
+    ],
+    "3": [
+      "Ingress.l2_C",
+      "Ingress.l2_nn",
+      "Ingress.l2_pkt"
+    ],
+    "4": [
+      "Ingress.l2_ep",
+      "Ingress.l2_hll"
+    ]
+  },
+  "stateful_reg_stages": {
+    "Ingress.l1_C": [
+      1
+    ],
+    "Ingress.l1_ep": [
+      1
+    ],
+    "Ingress.l1_hll": [
+      2
+    ],
+    "Ingress.l1_key": [
+      1
+    ],
+    "Ingress.l1_ne": [
+      2
+    ],
+    "Ingress.l1_nn": [
+      2
+    ],
+    "Ingress.l1_pkt": [
+      1
+    ],
+    "Ingress.l2_C": [
+      3
+    ],
+    "Ingress.l2_ep": [
+      4
+    ],
+    "Ingress.l2_hll": [
+      4
+    ],
+    "Ingress.l2_key": [
+      2
+    ],
+    "Ingress.l2_nn": [
+      3
+    ],
+    "Ingress.l2_pkt": [
+      3
+    ]
+  },
+  "stateful_regs_single_stage": true,
+  "max_stage_logical": 15,
+  "max_stage_logical_id": 0,
+  "max_stage_stateful": 4,
+  "max_stage_stateful_id": 1,
+  "n_tables_with_stage": 90,
+  "phv_logs": [
+    "phv_allocation_summary_0.log",
+    "phv_allocation_summary_3.log",
+    "phv_allocation_summary_6.log"
+  ],
+  "logs_dir": "<workspace>/build/out_v5/logs",
+  "compiler_log": "<workspace>/build/out_v5/compiler.log",
+  "baseline": {
+    "path": "<workspace>/baselines/sde971_84c_summary.json",
+    "status": "FAIL",
+    "unallocated_slices": 38,
+    "tables": null
+  }
+}

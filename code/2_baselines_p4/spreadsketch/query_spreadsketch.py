@@ -1,7 +1,7 @@
 import math
 import sys
 ROWS = 4
-W = 1024
+W = 1820
 BM_WORDS = 16
 M = 512
 THRESHOLD = 1000

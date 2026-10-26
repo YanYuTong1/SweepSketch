@@ -1,4 +1,3 @@
-
 #include <t2na.p4>
 #include "headers.p4"
 #include "parser.p4"
@@ -11,27 +10,23 @@ control Ingress(
     inout ingress_intrinsic_metadata_for_deparser_t ig_dprsr_md,
     inout ingress_intrinsic_metadata_for_tm_t       ig_tm_md)
 {
-    
-    
-    Register<bit<32>, bit<10>>(1024, 32w0)  key_r0;
-    Register<bit<8>,  bit<10>>(1024, 8w0)   lvl_r0;
-    Register<bit<32>, bit<14>>(16384, 32w0) bm_r0;
 
-    Register<bit<32>, bit<10>>(1024, 32w0)  key_r1;
-    Register<bit<8>,  bit<10>>(1024, 8w0)   lvl_r1;
-    Register<bit<32>, bit<14>>(16384, 32w0) bm_r1;
+    Register<bit<32>, bit<11>>(1820, 32w0) key_r0;
+    Register<bit<32>, bit<11>>(1820, 32w0) lvl_r0;
+    Register<bit<32>, bit<15>>(29120, 32w0) bm_r0;
 
-    Register<bit<32>, bit<10>>(1024, 32w0)  key_r2;
-    Register<bit<8>,  bit<10>>(1024, 8w0)   lvl_r2;
-    Register<bit<32>, bit<14>>(16384, 32w0) bm_r2;
+    Register<bit<32>, bit<11>>(1820, 32w0) key_r1;
+    Register<bit<32>, bit<11>>(1820, 32w0) lvl_r1;
+    Register<bit<32>, bit<15>>(29120, 32w0) bm_r1;
 
-    Register<bit<32>, bit<10>>(1024, 32w0)  key_r3;
-    Register<bit<8>,  bit<10>>(1024, 8w0)   lvl_r3;
-    Register<bit<32>, bit<14>>(16384, 32w0) bm_r3;
+    Register<bit<32>, bit<11>>(1820, 32w0) key_r2;
+    Register<bit<32>, bit<11>>(1820, 32w0) lvl_r2;
+    Register<bit<32>, bit<15>>(29120, 32w0) bm_r2;
 
-    
-    
-    
+    Register<bit<32>, bit<11>>(1820, 32w0) key_r3;
+    Register<bit<32>, bit<11>>(1820, 32w0) lvl_r3;
+    Register<bit<32>, bit<15>>(29120, 32w0) bm_r3;
+
     Hash<bit<32>>(HashAlgorithm_t.CRC32) h1;
     Hash<bit<32>>(HashAlgorithm_t.CRC32) h2;
     Hash<bit<16>>(HashAlgorithm_t.CRC32) h_bk0;
@@ -39,77 +34,70 @@ control Ingress(
     Hash<bit<16>>(HashAlgorithm_t.CRC32) h_bk2;
     Hash<bit<16>>(HashAlgorithm_t.CRC32) h_bk3;
 
-    
-    
-    RegisterAction<bit<8>, bit<10>, bit<8>>(lvl_r0) ra_lvl0 = {
-        void apply(inout bit<8> value, out bit<8> rv) {
-            rv = value;                                 
-            if (meta.lvl > value) { value = meta.lvl; } 
+    RegisterAction<bit<32>, bit<11>, bit<32>>(lvl_r0) ra_lvl0 = {
+        void apply(inout bit<32> value, out bit<32> rv) {
+            rv = value;
+            if ((bit<32>)meta.lvl > value) { value = (bit<32>)meta.lvl; }
         }
     };
-    RegisterAction<bit<32>, bit<10>, void>(key_r0) ra_key0 = {
+    RegisterAction<bit<32>, bit<11>, void>(key_r0) ra_key0 = {
         void apply(inout bit<32> value) {
-            
+
             if (meta.takeover_r0) { value = meta.src_addr; }
         }
     };
-    RegisterAction<bit<32>, bit<14>, void>(bm_r0) ra_bm0 = {
-        void apply(inout bit<32> value) { value = value | meta.bm_mask; }   
+    RegisterAction<bit<32>, bit<15>, void>(bm_r0) ra_bm0 = {
+        void apply(inout bit<32> value) { value = value | meta.bm_mask; }
     };
 
-    
-    RegisterAction<bit<8>, bit<10>, bit<8>>(lvl_r1) ra_lvl1 = {
-        void apply(inout bit<8> value, out bit<8> rv) {
+    RegisterAction<bit<32>, bit<11>, bit<32>>(lvl_r1) ra_lvl1 = {
+        void apply(inout bit<32> value, out bit<32> rv) {
             rv = value;
-            if (meta.lvl > value) { value = meta.lvl; }
+            if ((bit<32>)meta.lvl > value) { value = (bit<32>)meta.lvl; }
         }
     };
-    RegisterAction<bit<32>, bit<10>, void>(key_r1) ra_key1 = {
+    RegisterAction<bit<32>, bit<11>, void>(key_r1) ra_key1 = {
         void apply(inout bit<32> value) {
             if (meta.takeover_r1) { value = meta.src_addr; }
         }
     };
-    RegisterAction<bit<32>, bit<14>, void>(bm_r1) ra_bm1 = {
+    RegisterAction<bit<32>, bit<15>, void>(bm_r1) ra_bm1 = {
         void apply(inout bit<32> value) { value = value | meta.bm_mask; }
     };
 
-    
-    RegisterAction<bit<8>, bit<10>, bit<8>>(lvl_r2) ra_lvl2 = {
-        void apply(inout bit<8> value, out bit<8> rv) {
+    RegisterAction<bit<32>, bit<11>, bit<32>>(lvl_r2) ra_lvl2 = {
+        void apply(inout bit<32> value, out bit<32> rv) {
             rv = value;
-            if (meta.lvl > value) { value = meta.lvl; }
+            if ((bit<32>)meta.lvl > value) { value = (bit<32>)meta.lvl; }
         }
     };
-    RegisterAction<bit<32>, bit<10>, void>(key_r2) ra_key2 = {
+    RegisterAction<bit<32>, bit<11>, void>(key_r2) ra_key2 = {
         void apply(inout bit<32> value) {
             if (meta.takeover_r2) { value = meta.src_addr; }
         }
     };
-    RegisterAction<bit<32>, bit<14>, void>(bm_r2) ra_bm2 = {
+    RegisterAction<bit<32>, bit<15>, void>(bm_r2) ra_bm2 = {
         void apply(inout bit<32> value) { value = value | meta.bm_mask; }
     };
 
-    
-    RegisterAction<bit<8>, bit<10>, bit<8>>(lvl_r3) ra_lvl3 = {
-        void apply(inout bit<8> value, out bit<8> rv) {
+    RegisterAction<bit<32>, bit<11>, bit<32>>(lvl_r3) ra_lvl3 = {
+        void apply(inout bit<32> value, out bit<32> rv) {
             rv = value;
-            if (meta.lvl > value) { value = meta.lvl; }
+            if ((bit<32>)meta.lvl > value) { value = (bit<32>)meta.lvl; }
         }
     };
-    RegisterAction<bit<32>, bit<10>, void>(key_r3) ra_key3 = {
+    RegisterAction<bit<32>, bit<11>, void>(key_r3) ra_key3 = {
         void apply(inout bit<32> value) {
             if (meta.takeover_r3) { value = meta.src_addr; }
         }
     };
-    RegisterAction<bit<32>, bit<14>, void>(bm_r3) ra_bm3 = {
+    RegisterAction<bit<32>, bit<15>, void>(bm_r3) ra_bm3 = {
         void apply(inout bit<32> value) { value = value | meta.bm_mask; }
     };
 
-    
     action nop() {}
     action set_egr(bit<9> egr_port) { ig_tm_md.ucast_egress_port = egr_port; }
 
-    
     action do_h1() {
         meta.src_addr = hdr.ipv4.srcAddr;
         meta.h1 = h1.get({8w0x55, hdr.ipv4.srcAddr, hdr.ipv4.dstAddr});
@@ -118,65 +106,57 @@ control Ingress(
         meta.h2 = h2.get({8w0x56, hdr.ipv4.srcAddr, hdr.ipv4.dstAddr});
     }
 
-    
-    
     action do_split() {
         meta.pos     = meta.h1[31:23];
-        meta.bm_word = meta.pos[8:5];      
-        meta.bit_idx = meta.pos[4:0];      
-        meta.b0      = meta.h2[7:0];       
+        meta.bm_word = meta.pos[8:5];
+        meta.bit_idx = meta.pos[4:0];
+        meta.b0      = meta.h2[7:0];
         meta.b1      = meta.h2[15:8];
         meta.b2      = meta.h2[23:16];
         meta.b3      = meta.h2[31:24];
     }
 
-    
-    
-    
-    
     action act_lvl_tc(bit<8> lvl_v) { meta.lvl = lvl_v; }
 
-    
+    action act_fold0(bit<11> v) { meta.bucket_r0 = v; }
+    action act_fold1(bit<11> v) { meta.bucket_r1 = v; }
+    action act_fold2(bit<11> v) { meta.bucket_r2 = v; }
+    action act_fold3(bit<11> v) { meta.bucket_r3 = v; }
+
     action act_mask(bit<32> m) { meta.bm_mask = m; }
 
-    
-    
-    
     action do_bk0() {
         bit<16> raw = h_bk0.get({16w0x6600, hdr.ipv4.srcAddr});
-        meta.bucket_r0 = (bit<10>)(raw & 16w0x3FF);          
+        meta.raw11_r0 = (bit<11>)(raw & 16w0x7FF);
     }
     action do_bk1() {
         bit<16> raw = h_bk1.get({16w0x6601, hdr.ipv4.srcAddr});
-        meta.bucket_r1 = (bit<10>)(raw & 16w0x3FF);
+        meta.raw11_r1 = (bit<11>)(raw & 16w0x7FF);
     }
     action do_bk2() {
         bit<16> raw = h_bk2.get({16w0x6602, hdr.ipv4.srcAddr});
-        meta.bucket_r2 = (bit<10>)(raw & 16w0x3FF);
+        meta.raw11_r2 = (bit<11>)(raw & 16w0x7FF);
     }
     action do_bk3() {
         bit<16> raw = h_bk3.get({16w0x6603, hdr.ipv4.srcAddr});
-        meta.bucket_r3 = (bit<10>)(raw & 16w0x3FF);
+        meta.raw11_r3 = (bit<11>)(raw & 16w0x7FF);
     }
-    
+
     action do_bi0() { meta.bm_idx_r0 = meta.bucket_r0 ++ meta.bm_word; }
     action do_bi1() { meta.bm_idx_r1 = meta.bucket_r1 ++ meta.bm_word; }
     action do_bi2() { meta.bm_idx_r2 = meta.bucket_r2 ++ meta.bm_word; }
     action do_bi3() { meta.bm_idx_r3 = meta.bucket_r3 ++ meta.bm_word; }
 
-    
     action do_lvl0() { meta.old_lvl_r0 = ra_lvl0.execute(meta.bucket_r0); }
     action do_lvl1() { meta.old_lvl_r1 = ra_lvl1.execute(meta.bucket_r1); }
     action do_lvl2() { meta.old_lvl_r2 = ra_lvl2.execute(meta.bucket_r2); }
     action do_lvl3() { meta.old_lvl_r3 = ra_lvl3.execute(meta.bucket_r3); }
 
-    
-    action do_cmp0() { meta.takeover_r0 = (meta.lvl > meta.old_lvl_r0); }
-    action do_cmp1() { meta.takeover_r1 = (meta.lvl > meta.old_lvl_r1); }
-    action do_cmp2() { meta.takeover_r2 = (meta.lvl > meta.old_lvl_r2); }
-    action do_cmp3() { meta.takeover_r3 = (meta.lvl > meta.old_lvl_r3); }
+    action do_cmp0() { meta.takeover_r0 = ((bit<32>)meta.lvl > meta.old_lvl_r0); }
+    action do_cmp1() { meta.takeover_r1 = ((bit<32>)meta.lvl > meta.old_lvl_r1); }
+    action do_cmp2() { meta.takeover_r2 = ((bit<32>)meta.lvl > meta.old_lvl_r2); }
+    action do_cmp3() { meta.takeover_r3 = ((bit<32>)meta.lvl > meta.old_lvl_r3); }
 
-    
     action do_key0() { ra_key0.execute(meta.bucket_r0); }
     action do_key1() { ra_key1.execute(meta.bucket_r1); }
     action do_key2() { ra_key2.execute(meta.bucket_r2); }
@@ -186,13 +166,11 @@ control Ingress(
     action do_bm2()  { ra_bm2.execute(meta.bm_idx_r2); }
     action do_bm3()  { ra_bm3.execute(meta.bm_idx_r3); }
 
-    
-    
     table forward_ipv4 {
         key = { ig_intr_md.ingress_port : exact; }
         actions = { set_egr; nop; } default_action = nop(); size = 2;
     }
-    
+
     table ipv4_lpm {
         key = { hdr.ipv4.dstAddr : lpm; }
         actions = { set_egr; nop; } default_action = nop(); size = 4096;
@@ -201,7 +179,6 @@ control Ingress(
     table tb_h2    { actions = { do_h2; }    default_action = do_h2();    size = 1; }
     table tb_split { actions = { do_split; } default_action = do_split(); size = 1; }
 
-    
     table tz_tcam {
         key = {
             meta.b3 : ternary;
@@ -212,13 +189,16 @@ control Ingress(
         actions = { act_lvl_tc; } default_action = act_lvl_tc(8w1); size = 32;
     }
 
-    
     table tbl_mask {
         key = { meta.bit_idx : exact; }
         actions = { act_mask; nop; } default_action = nop(); size = 32;
     }
 
-    
+    table fold_r0 { key = { meta.raw11_r0 : exact; } actions = { act_fold0; } default_action = act_fold0(11w0); size = 2048; }
+    table fold_r1 { key = { meta.raw11_r1 : exact; } actions = { act_fold1; } default_action = act_fold1(11w0); size = 2048; }
+    table fold_r2 { key = { meta.raw11_r2 : exact; } actions = { act_fold2; } default_action = act_fold2(11w0); size = 2048; }
+    table fold_r3 { key = { meta.raw11_r3 : exact; } actions = { act_fold3; } default_action = act_fold3(11w0); size = 2048; }
+
     table tb_bk0  { actions = { do_bk0; }  default_action = do_bk0();  size = 1; }
     table tb_bi0  { actions = { do_bi0; }  default_action = do_bi0();  size = 1; }
     table tb_lvl0 { actions = { do_lvl0; } default_action = do_lvl0(); size = 1; }
@@ -250,19 +230,19 @@ control Ingress(
     apply {
         forward_ipv4.apply();
         if (hdr.ipv4.isValid()) {
-            ipv4_lpm.apply();               
-            
+            ipv4_lpm.apply();
+
             tb_h1.apply(); tb_h2.apply();
             tb_split.apply();
-            
+
             tz_tcam.apply();
-            
+
             tbl_mask.apply();
-            
-            tb_bk0.apply(); tb_bi0.apply(); tb_lvl0.apply(); tb_cmp0.apply(); tb_key0.apply(); tb_bm0.apply();
-            tb_bk1.apply(); tb_bi1.apply(); tb_lvl1.apply(); tb_cmp1.apply(); tb_key1.apply(); tb_bm1.apply();
-            tb_bk2.apply(); tb_bi2.apply(); tb_lvl2.apply(); tb_cmp2.apply(); tb_key2.apply(); tb_bm2.apply();
-            tb_bk3.apply(); tb_bi3.apply(); tb_lvl3.apply(); tb_cmp3.apply(); tb_key3.apply(); tb_bm3.apply();
+
+            tb_bk0.apply(); fold_r0.apply(); tb_bi0.apply(); tb_lvl0.apply(); tb_cmp0.apply(); tb_key0.apply(); tb_bm0.apply();
+            tb_bk1.apply(); fold_r1.apply(); tb_bi1.apply(); tb_lvl1.apply(); tb_cmp1.apply(); tb_key1.apply(); tb_bm1.apply();
+            tb_bk2.apply(); fold_r2.apply(); tb_bi2.apply(); tb_lvl2.apply(); tb_cmp2.apply(); tb_key2.apply(); tb_bm2.apply();
+            tb_bk3.apply(); fold_r3.apply(); tb_bi3.apply(); tb_lvl3.apply(); tb_cmp3.apply(); tb_key3.apply(); tb_bm3.apply();
         }
     }
 }
