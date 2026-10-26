@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from sweepsketch import config
 from sweepsketch.digest import Collector
 from sweepsketch.pcapio import iter_pcap
-from sweepsketch.v2run import finalize
+from sweepsketch.runner import finalize
 from common import make_sketch
 DB = os.path.join(REV, 'database')
 E3 = os.path.join(REV, 'results', 'e3')

@@ -7,8 +7,8 @@ VARIANT="${VARIANT:-sram}"
 P4_NAME=sweepsketch
 
 case "$VARIANT" in
-    sram) SRC="$P4_ROOT/src" ;;
-    tcam) SRC="$P4_ROOT/src-tcam" ;;
+    sram) SRC="$P4_ROOT/src/sram" ;;
+    tcam) SRC="$P4_ROOT/src/tcam" ;;
     *) echo "unknown VARIANT=$VARIANT (use sram or tcam)" >&2; exit 2 ;;
 esac
 

@@ -1,5 +1,5 @@
 {
-  "program": "<workspace>/build/repo_v5/sweepsketch.p4",
+  "program": "<workspace>/build/tcam/sweepsketch.p4",
   "program_md5": "7dda6d7edcee01dcc86c26e7a1bc35c0",
   "resubmit": true,
   "passes": 2,
@@ -19,7 +19,7 @@
   "tables_context": 197,
   "source_tables": 90,
   "table_names_unique": 197,
-  "context_json": "<workspace>/build/out_v5/pipe/context.json",
+  "context_json": "<workspace>/build/tcam/pipe/context.json",
   "phv_status": "PASS",
   "unallocated_slices": null,
   "unallocated_bits": null,
@@ -346,8 +346,8 @@
     "phv_allocation_summary_3.log",
     "phv_allocation_summary_6.log"
   ],
-  "logs_dir": "<workspace>/build/out_v5/logs",
-  "compiler_log": "<workspace>/build/out_v5/compiler.log",
+  "logs_dir": "<workspace>/build/tcam/logs",
+  "compiler_log": "<workspace>/build/tcam/compiler.log",
   "baseline": {
     "path": "<workspace>/baselines/sde971_84c_summary.json",
     "status": "FAIL",

@@ -11,7 +11,7 @@ sys.path.insert(0, HERE)
 from sweepsketch import config
 from sweepsketch.digest import Collector
 from sweepsketch.pcapio import iter_pcap
-from sweepsketch.v2run import finalize
+from sweepsketch.runner import finalize
 from common import make_sketch
 
 def iter_bin(path, limit=1 << 60):
@@ -47,7 +47,7 @@ def write_csv(path, alerts, n_pkts, wall, args, stats, raw=False):
             w.writerow([ts_ns, a.epoch, a.level, a.key, ks, a.reason, a.k, a.C, a.pkt])
     meta = os.path.splitext(path)[0] + '.meta.json'
     import json
-    payload = {'tool': 'replay_v2.py', 'argv': sys.argv, 'input': args.pcap or args.bin, 'limit': args.limit, 'budget_kb': args.budget_kb, 'raw': raw, 'n_packets': n_pkts, 'n_alerts': len(alerts), 'wall_s': round(wall, 2), 'pps': round(n_pkts / wall, 1) if wall > 0 else None, 'config': {'AGE_ENABLE': config.AGE_ENABLE, 'AGE_WIN': config.AGE_WIN, 'ALARM_CONFIRM': config.ALARM_CONFIRM, 'D2_CONFIRM_WINDOWS': config.D2_CONFIRM_WINDOWS, 'D2_CONFIRM_COUNT': config.D2_CONFIRM_COUNT, 'COOLDOWN_WIN': config.COOLDOWN_WIN, 'QUARANTINE': config.QUARANTINE, 'Q_MAX_K': config.Q_MAX_K, 'Q_GROWTH_MULT': config.Q_GROWTH_MULT, 'Q_REQUIRE_NO_D1': config.Q_REQUIRE_NO_D1, 'CROSS16': config.CROSS16, 'CROSS_W': config.CROSS_W, 'CROSS_K': config.CROSS_K, 'CROSS_NNEW_FLOOR': config.CROSS_NNEW_FLOOR}, 'stats': stats}
+    payload = {'tool': 'replay.py', 'argv': sys.argv, 'input': args.pcap or args.bin, 'limit': args.limit, 'budget_kb': args.budget_kb, 'raw': raw, 'n_packets': n_pkts, 'n_alerts': len(alerts), 'wall_s': round(wall, 2), 'pps': round(n_pkts / wall, 1) if wall > 0 else None, 'config': {'AGE_ENABLE': config.AGE_ENABLE, 'AGE_WIN': config.AGE_WIN, 'ALARM_CONFIRM': config.ALARM_CONFIRM, 'D2_CONFIRM_WINDOWS': config.D2_CONFIRM_WINDOWS, 'D2_CONFIRM_COUNT': config.D2_CONFIRM_COUNT, 'COOLDOWN_WIN': config.COOLDOWN_WIN, 'QUARANTINE': config.QUARANTINE, 'Q_MAX_K': config.Q_MAX_K, 'Q_GROWTH_MULT': config.Q_GROWTH_MULT, 'Q_REQUIRE_NO_D1': config.Q_REQUIRE_NO_D1, 'CROSS16': config.CROSS16, 'CROSS_W': config.CROSS_W, 'CROSS_K': config.CROSS_K, 'CROSS_NNEW_FLOOR': config.CROSS_NNEW_FLOOR}, 'stats': stats}
     with open(meta, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2, sort_keys=True)
 

@@ -46,4 +46,4 @@ if __name__ == '__main__':
     reasons = sorted(((a.level, a.reason) for a in eps))
     assert (3, 'DIST') in reasons, reasons
     assert (1, 'D1') in reasons, reasons
-    print('v2run self-check ok:', reasons, stats['cross16'])
+    print('runner self-check ok:', reasons, stats['cross16'])

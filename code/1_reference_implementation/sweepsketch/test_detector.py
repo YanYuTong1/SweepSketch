@@ -7,7 +7,7 @@ from sweepsketch.bucket import Bucket
 from sweepsketch.cross16 import CrossPrefixCorrelator
 from sweepsketch.digest import Alert, Collector
 from sweepsketch.sketch import Level, SweepSketch
-from sweepsketch.v2run import finalize
+from sweepsketch.runner import finalize
 
 def _hot_bucket_sketch():
     sk = SweepSketch()
@@ -121,7 +121,7 @@ def test_pipeline_end_to_end():
     assert stats['raw'] == 4
     print('  pipeline: finalize ok', stats['cross16']['dist_emitted'])
 if __name__ == '__main__':
-    print('v2 unit tests:')
+    print('unit tests:')
     test_aging_replace_stale_hot()
     test_aging_keep_active_hot()
     test_aging_disabled()
@@ -130,4 +130,4 @@ if __name__ == '__main__':
     test_cross16_switch1()
     test_cross16_no_l2_aggregation()
     test_pipeline_end_to_end()
-    print('ALL v2 UNIT TESTS PASSED')
+    print('ALL UNIT TESTS PASSED')

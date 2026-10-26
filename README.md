@@ -14,7 +14,7 @@ the Tofino2 data plane is a 90-table, 12-stage, two-pass program that reports a
 
 ```
 code/
-  1_reference_implementation/   Python reference detector (v2) and experiment drivers
+  1_reference_implementation/   Python reference detector and experiment drivers
     experiments/                Drivers for the paper's dynamic experiments (E1-E13)
   2_baselines_p4/               P4 ports of the comparison baselines (reference only)
   3_throughput_cpp/             C++ per-packet insertion-path throughput harness
@@ -62,7 +62,6 @@ Run from `code/1_reference_implementation`. Attack CSV files are read from
 | `python3 run_sweep.py iot` | five-dataset static |
 | `python3 run_sweep.py compare` | baseline comparison |
 
-
 The dynamic results of the paper come from the drivers in
 `code/1_reference_implementation/experiments/`:
 
@@ -107,8 +106,8 @@ Two forms of the same two-pass program are shipped:
 
 | Form | Directory | TCAM cells | MAU SRAM words | SRAM units |
 |---|---|---|---|---|
-| SRAM lookup | `code/4_dataplane_deployed_p4/src` | 8 (1.67%) | 11,264 | 73 |
-| TCAM lookup | `code/4_dataplane_deployed_p4/src-tcam` | 29 (6.04%) | 2,048 | 76 |
+| SRAM lookup | `code/4_dataplane_deployed_p4/src/sram` | 8 (1.67%) | 11,264 | 73 |
+| TCAM lookup | `code/4_dataplane_deployed_p4/src/tcam` | 29 (6.04%) | 2,048 | 76 |
 
 Both compile to 90 physical tables (89 algorithmic plus the shared IPv4 LPM
 table), 12 stages, and 13 stateful registers each confined to a single MAU
@@ -125,7 +124,8 @@ SDE=/path/to/bf-sde-9.7.1 VARIANT=tcam ./control/deploy_sweep_2pass.sh build
 ```
 
 The compile evidence for both forms is in `code/4_dataplane_deployed_p4/evidence/`
-(`summary.json`, `compiler.log`, `resources.json`, `mau.resources.log`). With
+(`sram/` and `tcam/`: `summary.json`, `compiler.log`, `resources.json`,
+`mau.resources.log`). With
 `bf-p4c` 9.7.1 the SRAM form compiles and places in 38.5 s and the TCAM form in
 36.9 s, with zero placement errors. The claim is compile-and-place: no traffic
 was run on a switch in this artifact.
@@ -178,8 +178,7 @@ The optional backbone stress test (`exp9`) expects
 
 ## Reference detector constants
 
-The Python reference implementation (v2) uses the frozen constants of the
-paper: `AGE_WIN = 4`, `COOLDOWN_WIN = 20`, D2 confirmation over 2 of the last 3
+The shipped reference implementation uses the frozen constants of the paper: `AGE_WIN = 4`, `COOLDOWN_WIN = 20`, D2 confirmation over 2 of the last 3
 windows, cross-prefix `W = 4` and `K = 2` with a 12-destination signal, a quiet
 floor of 12, and `Q_MAX_K = 16`.
 
@@ -188,8 +187,8 @@ floor of 12, and `Q_MAX_K = 16`.
 The P4 sources are shipped without comments. Their md5 after comment removal is
 `11c0ee5171142f14b7f82f13c053adb7` (`headers.p4`),
 `082bb52531a4c374290031f32c553d38` (`parser.p4`),
-`20f1a4681b9fb3852a0cbd196d041004` (`src/sweepsketch.p4`), and
-`7dda6d7edcee01dcc86c26e7a1bc35c0` (`src-tcam/sweepsketch.p4`). Each was
+`20f1a4681b9fb3852a0cbd196d041004` (`src/sram/sweepsketch.p4`), and
+`7dda6d7edcee01dcc86c26e7a1bc35c0` (`src/tcam/sweepsketch.p4`). Each was
 re-compiled with `bf-p4c` 9.7.1 after stripping, and the resulting per-stage
 resource tables are identical to the frozen builds (90 tables, 12 stages, 13
 single-stage registers, TCAM 8 or 29 cells, SRAM 73 or 76 units). The evidence

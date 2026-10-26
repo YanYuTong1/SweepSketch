@@ -1,0 +1,1 @@
+/work/sde971/install/bin/bf-p4c -b tofino2 -a t2na -g --verbose 2 --Wdisable=duplicate -I /work/sde971/install/share/p4c/p4include -I /work/sde971/install/share/p4/targets/tofino2 -I /work/build/tcam -o /work/build/tcam /work/build/tcam/sweepsketch.p4 
