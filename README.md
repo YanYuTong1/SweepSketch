@@ -3,12 +3,11 @@
 Code and packet-record data for the paper *SweepSketch: Detecting Carpet-Bombing
 Attacks Before They End*.
 
-SweepSketch is a per-packet, destination-anchored detector for carpet-bombing
-DDoS. It keeps no source-side state, needs no training, and raises its first
-alarm while the attack is still running. The detector state is 512 KB; the
-bit-exact C++ implementation reaches 13.21 Mpps per core in detect-only mode;
-the Tofino2 data plane is a 90-table, 12-stage, two-pass program that reports a
-28-B snapshot per packet.
+SweepSketch detects carpet-bombing DDoS from the destination side, one packet at
+a time, without source-side state or training; it raises its first alarm while
+the attack is still in progress. The detector state occupies 512 KB. A bit-exact
+C++ implementation reaches 13.21 Mpps per core, and the Tofino2 data plane is a
+two-pass, 90-table, 12-stage program that reports a 28-B snapshot per packet.
 
 ## Layout
 
@@ -16,10 +15,11 @@ the Tofino2 data plane is a 90-table, 12-stage, two-pass program that reports a
 code/
   1_reference_implementation/   Python reference detector and experiment drivers
     experiments/                Drivers for the paper's dynamic experiments (E1-E13)
-  2_baselines_p4/               P4 ports of the comparison baselines (reference only)
+  2_baselines_p4/               P4 ports of the comparison baselines
   3_throughput_cpp/             C++ per-packet insertion-path throughput harness
   4_dataplane_deployed_p4/      Tofino2 P4 program (two forms) and compile evidence
   5_cpp_detector/               C++20 bit-exact detector and benchmark harness
+  6_dpu_data_plane/             Portable C model of the DPU data plane
 database/
   attack/                       101 gzipped CSV packet records and SHA256SUMS.txt
 ```
@@ -28,9 +28,18 @@ database/
 
 - Python 3.10+; the reference implementation uses only the standard library.
   The drivers in `experiments/` additionally use `numpy` and `matplotlib`, and
-  E3 uses `torch` plus the external NetRadar repository (set `NETRADAR_DIR`).
+  E3 uses `torch` plus the NetRadar repository (set `NETRADAR_DIR`).
 - A C++20 compiler for `code/3_throughput_cpp` and `code/5_cpp_detector`.
+- A C11 compiler for `code/6_dpu_data_plane`.
 - Intel Tofino2 and BF-SDE 9.7.1 (`bf-p4c` 9.7.1) for `code/4`.
+
+## Experiment environment
+
+| Environment | Used for | Configuration |
+|---|---|---|
+| Workstation | Python detector, C++ detector and throughput harness, E1-E13 drivers | Apple M5 Pro, 15 cores, 24 GB RAM, macOS 27.0.1 |
+| BF-SDE 9.7.1 container | `bf-p4c` 9.7.1 compiles and resource reports | Ubuntu 22.04 x86_64 (`sde971-amd64`) on Docker Desktop 29.5.2 with Rosetta; 15 vCPU, 19.8 GB |
+| Tofino2 testbed | Hardware compile and resource report | Tofino2, T2NA, BF-SDE 9.7.1 |
 
 ## Quick start
 
@@ -43,8 +52,8 @@ python3 run_sweep.py selfcheck
 
 ## Experiment drivers
 
-Run from `code/1_reference_implementation`. Attack CSV files are read from
-`database/attack/`; benign corpora are described under Data below.
+Run from `code/1_reference_implementation`; attack files are read from
+`database/attack/` and benign corpora from `database/benign/`.
 
 | Command | Paper item |
 |---|---|
@@ -62,8 +71,7 @@ Run from `code/1_reference_implementation`. Attack CSV files are read from
 | `python3 run_sweep.py iot` | five-dataset static |
 | `python3 run_sweep.py compare` | baseline comparison |
 
-The dynamic results of the paper come from the drivers in
-`code/1_reference_implementation/experiments/`:
+The dynamic results of the paper come from `code/1_reference_implementation/experiments/`:
 
 | Driver | Result in the paper | Command |
 |---|---|---|
@@ -79,9 +87,9 @@ The dynamic results of the paper come from the drivers in
 | E11 | deadline recall and damage | `python3 e11_deadline.py` |
 | E12/E12b/E13 | benign and deadline curves | `python3 e12.py`; `python3 e12b_sk.py`; `python3 e13.py` |
 
-E3 needs the NetRadar code plus its training artifacts; E11-E13 reuse the E3
-models. Full runs of E1, E2, E4, and E5 take hours on many cores.
-Results are written under `results/` at the repository root.
+E3 needs the NetRadar code and its trained models; E11-E13 reuse those models.
+E1, E2, E4, and E5 take hours on a many-core machine. Results are written to
+`results/` at the repository root.
 
 ## C++
 
@@ -97,12 +105,24 @@ make
 ./build/detector --bin /tmp/synth.bin --bench --repeats 3 --max-pkts 200000
 ```
 
-`--pcap FILE` accepts a packet capture directly; `--alarms OUT.csv` writes the
+`--pcap FILE` reads a packet capture directly; `--alarms OUT.csv` writes the
 alarm stream.
+
+## DPU data plane
+
+`code/6_dpu_data_plane` implements 48-B T-HLL buckets, per-packet CUSUM,
+dual EWMA gates, and an alarm ring. It runs 1,000,000 synthetic packets and
+prints raw alarm counts and a state checksum. The model is host-runnable;
+device-specific build files and management interfaces are not included.
+
+```bash
+cd code/6_dpu_data_plane
+./run.sh
+```
 
 ## Tofino2 data plane
 
-Two forms of the same two-pass program are shipped:
+Two forms of the two-pass program are provided:
 
 | Form | Directory | TCAM cells | MAU SRAM words | SRAM units |
 |---|---|---|---|---|
@@ -110,8 +130,8 @@ Two forms of the same two-pass program are shipped:
 | TCAM lookup | `code/4_dataplane_deployed_p4/src/tcam` | 29 (6.04%) | 2,048 | 76 |
 
 Both compile to 90 physical tables (89 algorithmic plus the shared IPv4 LPM
-table), 12 stages, and 13 stateful registers each confined to a single MAU
-stage, with a 500-KB register state (42 B per /24 entry at depth 8,192 and 41 B
+table), 12 stages, and 13 stateful registers, each confined to a single MAU
+stage; the register state is 500 KB (42 B per /24 entry at depth 8,192 and 41 B
 per /16 entry at depth 4,096). Pass 1 reads the bucket state, decides per
 packet, and emits a 28-B snapshot; pass 2 writes the new state. The final gates,
 confirmation, and cross-prefix correlation run on the control plane.
@@ -123,26 +143,25 @@ SDE=/path/to/bf-sde-9.7.1 VARIANT=sram ./control/deploy_sweep_2pass.sh build
 SDE=/path/to/bf-sde-9.7.1 VARIANT=tcam ./control/deploy_sweep_2pass.sh build
 ```
 
-The compile evidence for both forms is in `code/4_dataplane_deployed_p4/evidence/`
-(`sram/` and `tcam/`: `summary.json`, `compiler.log`, `resources.json`,
-`mau.resources.log`). With
-`bf-p4c` 9.7.1 the SRAM form compiles and places in 38.5 s and the TCAM form in
-36.9 s, with zero placement errors. The claim is compile-and-place: no traffic
-was run on a switch in this artifact.
+Compile evidence is archived in `code/4_dataplane_deployed_p4/evidence/`
+(`sram/` and `tcam/`, each with `summary.json`, `compiler.log`,
+`resources.json`, and `mau.resources.log`). With `bf-p4c` 9.7.1 the SRAM form
+compiles and places in 38.5 s and the TCAM form in 36.9 s, with zero placement
+errors.
 
 ## Baseline P4 ports
 
-`code/2_baselines_p4/` holds P4 ports of the comparison methods: SegSketch,
-SpreadSketch, Couper, RHHH, ElasticSketch, HeavyKeeper, MRB, and the two entropy
-baselines. They were written for an earlier switch-resource comparison; the
-paper's quantitative comparison uses the Python implementations, so these ports
-are kept for reference and are not needed to reproduce the reported results.
+`code/2_baselines_p4/` holds P4 ports of SegSketch, SpreadSketch, Couper, RHHH,
+ElasticSketch, HeavyKeeper, MRB, and the two entropy baselines. The paper's
+quantitative comparison uses the Python implementations of these methods and
+reports no switch-resource numbers for the baselines, so the ports are
+supplementary and are not required to reproduce the results.
 
-The shipped SpreadSketch port is the full 511.9-KB configuration (four rows,
+The SpreadSketch port uses the full 511.9-KB configuration (four rows,
 W = 1820 buckets per row, 72 B per bucket). Load `setup_fold.py` after
-`setup_tables.py`, and run `query_spreadsketch.py` with `W=1820` (the default).
-The Couper port is the faithful transliteration that does not place on Tofino2;
-it is included to document that result.
+`setup_tables.py`, and run `query_spreadsketch.py` with `W=1820`, which is the
+default. The Couper port is a faithful transliteration that does not fit
+placement on Tofino2; it is kept to document that finding.
 
 ## Data
 
@@ -178,21 +197,20 @@ The optional backbone stress test (`exp9`) expects
 
 ## Reference detector constants
 
-The shipped reference implementation uses the frozen constants of the paper: `AGE_WIN = 4`, `COOLDOWN_WIN = 20`, D2 confirmation over 2 of the last 3
-windows, cross-prefix `W = 4` and `K = 2` with a 12-destination signal, a quiet
-floor of 12, and `Q_MAX_K = 16`.
+The reference implementation uses the paper's frozen constants: `AGE_WIN = 4`,
+`COOLDOWN_WIN = 20`, D2 confirmation on 2 of the last 3 windows, cross-prefix
+`W = 4` and `K = 2` with a 12-destination signal, a quiet floor of 12, and
+`Q_MAX_K = 16`.
 
 ## Provenance
 
-The P4 sources are shipped without comments. Their md5 after comment removal is
-`11c0ee5171142f14b7f82f13c053adb7` (`headers.p4`),
+The md5 of each P4 source is `11c0ee5171142f14b7f82f13c053adb7` (`headers.p4`),
 `082bb52531a4c374290031f32c553d38` (`parser.p4`),
 `20f1a4681b9fb3852a0cbd196d041004` (`src/sram/sweepsketch.p4`), and
-`7dda6d7edcee01dcc86c26e7a1bc35c0` (`src/tcam/sweepsketch.p4`). Each was
-re-compiled with `bf-p4c` 9.7.1 after stripping, and the resulting per-stage
-resource tables are identical to the frozen builds (90 tables, 12 stages, 13
-single-stage registers, TCAM 8 or 29 cells, SRAM 73 or 76 units). The evidence
-directories keep the compile logs for both forms.
+`7dda6d7edcee01dcc86c26e7a1bc35c0` (`src/tcam/sweepsketch.p4`). The per-stage
+resource tables produced by `bf-p4c` 9.7.1 are archived under
+`code/4_dataplane_deployed_p4/evidence/`: 90 tables, 12 stages, 13 single-stage
+registers, TCAM 8 or 29 cells, and SRAM 73 or 76 units.
 
 ## Citation
 
