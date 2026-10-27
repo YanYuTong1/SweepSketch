@@ -37,9 +37,11 @@ database/
 
 | Environment | Used for | Configuration |
 |---|---|---|
-| Workstation | Python detector, C++ detector and throughput harness, E1-E13 drivers | Apple M5 Pro, 15 cores, 24 GB RAM, macOS 27.0.1 |
-| BF-SDE 9.7.1 container | `bf-p4c` 9.7.1 compiles and resource reports | Ubuntu 22.04 x86_64 (`sde971-amd64`) on Docker Desktop 29.5.2 with Rosetta; 15 vCPU, 19.8 GB |
+| Workstation | Python detector, C++ detector and throughput harness, E1-E13 drivers, DPU host replay | Apple M5 Pro, 15 cores, 24 GB RAM, macOS 27.0.1 |
+| BF-SDE 9.7.1 container | `bf-p4c` 9.7.1 compilation and resource reports | Ubuntu 22.04 x86_64 (`sde971-amd64`) on Docker Desktop 29.5.2 with Rosetta; 15 vCPU, 19.8 GB |
 | Tofino2 testbed | Hardware compile and resource report | Tofino2, T2NA, BF-SDE 9.7.1 |
+| DPU hardware | Micro-engine deployment | DPU with 240 KB on-chip SRAM, 5,120 slots |
+| DPU toolchain container | Micro-engine build and device image | arm64 Linux (AlmaLinux 8) on Docker Desktop; vendor RISC-V toolchain |
 
 ## Quick start
 
@@ -112,8 +114,9 @@ alarm stream.
 
 `code/6_dpu_data_plane` implements 48-B T-HLL buckets, per-packet CUSUM,
 dual EWMA gates, and an alarm ring. It runs 1,000,000 synthetic packets and
-prints raw alarm counts and a state checksum. The model is host-runnable;
-device-specific build files and management interfaces are not included.
+prints raw alarm counts and a state checksum. The model runs on the host;
+device-specific build files and management interfaces are not included in this
+release.
 
 ```bash
 cd code/6_dpu_data_plane
@@ -153,15 +156,14 @@ errors.
 
 `code/2_baselines_p4/` holds P4 ports of SegSketch, SpreadSketch, Couper, RHHH,
 ElasticSketch, HeavyKeeper, MRB, and the two entropy baselines. The paper's
-quantitative comparison uses the Python implementations of these methods and
-reports no switch-resource numbers for the baselines, so the ports are
-supplementary and are not required to reproduce the results.
+reported F1 numbers come from the Python implementations; the P4 ports cover
+switch-resource accounting.
 
 The SpreadSketch port uses the full 511.9-KB configuration (four rows,
 W = 1820 buckets per row, 72 B per bucket). Load `setup_fold.py` after
 `setup_tables.py`, and run `query_spreadsketch.py` with `W=1820`, which is the
-default. The Couper port is a faithful transliteration that does not fit
-placement on Tofino2; it is kept to document that finding.
+default. The Couper port is a direct port that does not fit placement on Tofino2; it is
+kept to document that finding.
 
 ## Data
 
@@ -214,7 +216,7 @@ registers, TCAM 8 or 29 cells, and SRAM 73 or 76 units.
 
 ## Citation
 
-The paper is under review. Until the author list is public, cite it as:
+The paper is under review; cite it as:
 
 ```
 SweepSketch: Detecting Carpet-Bombing Attacks Before They End.
